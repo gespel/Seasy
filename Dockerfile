@@ -1,8 +1,10 @@
 FROM rust:latest
 LABEL authors="stenh"
 
+EXPOSE 3000
+
 COPY . .
 
-CMD cargo build
+RUN cargo build
 
 ENTRYPOINT ["./target/debug/seazy"]
