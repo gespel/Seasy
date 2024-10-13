@@ -27,12 +27,13 @@ async fn upload(mut multipart: Multipart) -> Result<(StatusCode, String), (Statu
         let name = field.name().unwrap_or("unknown").to_string();
         let file_name = field.file_name().unwrap_or("file").to_string();
         let data = field.bytes().await.unwrap();
-
+        let data_length = data.len();
+        println!("Name: {}, File: {}, Data: {}", name, file_name, data_length);
         // Save the file to disk
-        let mut file = File::create(format!("./uploads/{}", file_name))
+        /*let mut file = File::create(format!("./uploads/{}", file_name))
             .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR).unwrap();
         file.write_all(&data)
-            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR).unwrap();
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR).unwrap();*/
     }
     Ok((StatusCode::OK, "ok".to_string()))
     //Ok(Html("<h1>File Uploaded Successfully</h1>"))
