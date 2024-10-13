@@ -19,6 +19,7 @@ async fn main() {
 }
 
 async fn root() -> Result<String, String> {
+    println!("Hello was hit!");
     Ok("Hello, World!".to_string())
 }
 
