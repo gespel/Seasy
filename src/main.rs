@@ -6,20 +6,25 @@ use std::io::Write;
 use axum::extract::Multipart;
 use axum::http::StatusCode;
 use axum::routing::{get, post};
+use log::{debug, error, info};
 
 #[tokio::main]
 async fn main() {
+    tracing_subscriber::fmt()
+        .with_ansi(false)
+        .init();
     let app = Router::new()
         .route("/", get(root))
         .route("/upload", post(upload));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    info!("Server listening on port 3000");
     axum::serve(listener, app).await.unwrap();
 
 }
 
 async fn root() -> Result<String, String> {
-    println!("Hello was hit!");
+    info!("Root page visit.");
     Ok("Hello, World!".to_string())
 }
 
@@ -29,7 +34,7 @@ async fn upload(mut multipart: Multipart) -> Result<(StatusCode, String), (Statu
         let file_name = field.file_name().unwrap_or("file").to_string();
         let data = field.bytes().await.unwrap();
         let data_length = data.len();
-        println!("Name: {}, File: {}, Data: {}", name, file_name, data_length);
+        info!("Name: {}, File: {}, Data: {}", name, file_name, data_length);
         // Save the file to disk
         /*let mut file = File::create(format!("./uploads/{}", file_name))
             .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR).unwrap();
